@@ -27,6 +27,7 @@ var async = require('async');
 var log = require('./logger').logger;
 var RepositoryClient;
 
+var DEBUG = false;
 
 /**
  * An interface to the Github repository. Uses the Github API.
@@ -48,7 +49,7 @@ function RepositoryClient(config) {
     // Set up GitHub API Client.
     this.github = new GitHubApi({
         timeout: 5000,
-        // debug: true,
+        debug: DEBUG,
     });
     this.github.authenticate({
         type: 'basic',
@@ -76,7 +77,7 @@ function RepositoryClient(config) {
                 }
             });
             if (! me.appveyorProject) {
-                log.warn('No AppVeyor builds for ' + me);
+                log.info('No AppVeyor builds for ' + me);
             } else {
                 log.info('AppVeyor builds exist for ' + me);
             }
@@ -131,10 +132,11 @@ RepositoryClient.prototype.isBehindMaster = function(sha, callback) {
       repo: this.repo,
       base: 'master',
       head: sha
-    }, function(err, data) {
+  }, function(err, payload) {
         if (err) {
             callback(err);
         } else {
+            var data = payload.data;
             callback(err, data.behind_by > 0, data.behind_by);
         }
     });
@@ -367,6 +369,7 @@ RepositoryClient.prototype.getLastCommitOnPullRequest = function(prNumber, callb
  * @public
  */
 RepositoryClient.prototype.searchIssues = function(query, callback) {
+    log.debug("Searching for %s", query)
     this.github.search.issues({
       owner: this.org,
       repo: this.repo,
@@ -421,8 +424,8 @@ RepositoryClient.prototype.confirmWebhookExists = function(url, events, callback
         log.debug('Found %s webhooks for %s', hooks.length, slug);
 
         if (! hooks.forEach) {
-            console.warn('%s seems to be misconfigured! Did it move?', slug);
-            console.warn(hooks);
+            log.warn('%s seems to be misconfigured! Did it move?', slug);
+            log.warn(hooks);
             return callback();
         }
 
@@ -431,7 +434,7 @@ RepositoryClient.prototype.confirmWebhookExists = function(url, events, callback
             if (hook.config && _.contains(hook.config.url, me.host)) {
                 hookRemovers.push(function(hookRemovalCallback) {
                     // Remove the old webhook
-                    log.warn('%s: Removing webhook %s for %s.', slug, hook.id, url);
+                    log.info('%s: Removing webhook %s for %s.', slug, hook.id, url);
                     me.github.repos.deleteHook({
                       owner: me.org,
                       repo: me.repo,
@@ -459,7 +462,7 @@ RepositoryClient.prototype.confirmWebhookExists = function(url, events, callback
                     if (err) {
                         return callback(err);
                     }
-                    log.warn(
+                    log.info(
                       "%s: created web hook %s for %s, monitoring events '%s'",
                         slug, data.id, data.config.url, data.events.join(', ')
                     );

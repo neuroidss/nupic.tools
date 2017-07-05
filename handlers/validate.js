@@ -11,6 +11,8 @@ var fs = require('fs')
   , repoClients
   ;
 
+var log = require('../utils/logger').logger;
+
 function initializeValidators(dir) {
     var fullDir = path.join(__dirname, '..', dir);
     fs.readdirSync(fullDir).forEach(function(validator) {
@@ -30,10 +32,15 @@ function findClientFor(sha, callback) {
         if (! nextClient) {
             return callback();
         }
-        nextClient.getCommit(sha, function(err, commit) {
-            if (! err && commit && commit.sha) {
-                found = true;
-                callback(nextClient, commit);
+        nextClient.getCommit(sha, function(err, payload) {
+            if (! err) {
+                var commit = payload.data;
+                if (commit && commit.sha) {
+                    found = true;
+                    callback(nextClient, commit);
+                } else {
+                    next();
+                }
             } else {
                 next();
             }
@@ -67,7 +74,10 @@ function validateSha(req, res) {
         return jsonUtils.renderErrors(errors, res, jsonPCallback);
     }
 
+    log.debug("finding client for sha %s", sha)
+
     findClientFor(sha, function(client, payload) {
+        log.debug("Found client %s", client.toString());
         var committer;
         if (! client) {
             errors.push(new Error(

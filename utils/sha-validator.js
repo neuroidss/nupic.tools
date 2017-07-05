@@ -26,7 +26,6 @@ function postNewNupicStatus(statusContext, sha, statusDetails, repoClient) {
       , description: statusDetails.description
       , target_url: statusDetails.target_url
     };
-    log.debug(payload);
     repoClient.github.statuses.create(payload);
 }
 
@@ -40,10 +39,10 @@ function triggerBuildsOnAllOpenPullRequests(repoClient, callback) {
         _.each(prs, function(pr) {
             triggers.push(function(localCallback) {
                 repoClient.triggerTravisForPullRequest(pr.number, localCallback);
-                // AppVeyor only gives us one resource and queues the rest, which 
+                // AppVeyor only gives us one resource and queues the rest, which
                 // takes a really long time. We decided to turn off automatic PR
                 // rebuilds for AV because of this. Any bugs that slip through
-                // will still be caught on master branch builds. 
+                // will still be caught on master branch builds.
                 // repoClient.triggerAppVeyorForPullRequest(pr.number, localCallback);
             });
         });
@@ -66,12 +65,13 @@ function performCompleteValidation(sha
         callback = function() {};
     }
 
-    repoClient.searchIssues(searchString, function(err, prs) {
+    repoClient.searchIssues(searchString, function(err, payload) {
+        var prs;
         var validationFunctions = {};
         if (err) {
             return callback(err);
         }
-
+        prs = payload.data;
         if (prs.total_count == 0) {
             // No PR for this commit, so no point in validating.
             log.warn('Skipping validation of ' + sha + ' because it has no PR.');
