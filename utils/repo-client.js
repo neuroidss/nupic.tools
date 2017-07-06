@@ -355,11 +355,12 @@ RepositoryClient.prototype.getLastCommitOnPullRequest = function(prNumber, callb
       repo:     this.repo,
       number:   prNumber,
       per_page: 100
-    }, function(err, commits) {
+  }, function(err, payload) {
         if (err) {
             callback(err);
         } else {
-            callback(null, commits.data[commits.length - 1]);
+            var commits = payload.data;
+            callback(null, commits[commits.length - 1]);
         }
     });
 };
