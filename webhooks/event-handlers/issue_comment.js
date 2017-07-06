@@ -23,11 +23,11 @@ function issueCommentHandler(payload, config, repoClient, validators, callback) 
             email = payload.commit.committer.email;
         } else {
             log.warn('Cannot identify PR committer!');
-            log.warn(JSON.stringify(commit, null, 2));
+            log.warn(JSON.stringify(payload, null, 2));
             return;
         }
         shaValidator.performCompleteValidation(
-            commit.sha
+            payload.sha
           , {login: login, name: name, email: email}
           , repoClient
           , validators
