@@ -316,7 +316,8 @@ RepositoryClient.prototype.getAllStatusesFor = function(sha, callback) {
       repo: this.repo,
       sha:  sha
     }, function(err, payload) {
-        callback(err, (payload.data || []));
+        if (err) callback(err)
+        else callback(null, (payload.data || []));
     });
 };
 
