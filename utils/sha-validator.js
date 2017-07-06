@@ -26,7 +26,7 @@ function postNewNupicStatus(statusContext, sha, statusDetails, repoClient) {
       , description: statusDetails.description
       , target_url: statusDetails.target_url
     };
-    repoClient.github.createStatus(payload);
+    repoClient.github.repos.createStatus(payload);
 }
 
 function triggerBuildsOnAllOpenPullRequests(repoClient, callback) {
