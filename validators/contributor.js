@@ -4,14 +4,17 @@ var contribUtil = require('../utils/contributors')
   , WHITELIST = ['numenta-ci']
   ;
 
-function isContributor(name, roster) {
-    if (name == null || name == undefined) return false;
-    if (name === false) return true; // explicit false means ignore
-    return roster.map(function(p) { return p.Github; })
-                 .reduce(function(prev, curr) {
-                    if (prev) return prev;
-                    return curr == name;
-                 }, false);
+function isContributor(identity, roster) {
+    if (! identity) return false;
+    var found = false;
+    roster.forEach(function(person) {
+        if (person.Github == identity.login
+            || person.Name == identity.name
+            || person.email == identity.email) {
+            found = true;
+        }
+    });
+    return found;
 }
 
 function validator(sha, githubUser, repoClient, callback) {
@@ -36,7 +39,7 @@ function validator(sha, githubUser, repoClient, callback) {
             response.target_url = 'http://numenta.org/contributors/';
         } else {
             response.state = 'failure';
-            response.description = githubUser 
+            response.description = githubUser
                 + ' must sign the Contributor License';
             response.target_url = 'http://numenta.org/licenses/cl/';
         }

@@ -11,22 +11,24 @@ function issueCommentHandler(payload, config, repoClient, validators, callback) 
 
     repoClient.getLastCommitOnPullRequest(prNumber, function(err, payload) {
         if (err) return log.error(err);
-        var commit = payload.data;
-        var login;
+        var login, email, name;
         log.debug(JSON.stringify(payload, null, 2));
-        if (commit.committer) {
-            login = commit.committer.name;
-        } else if (commit.author) {
-            login = commit.author.name;
-        }
-        if (! login) {
-            log.warn('Cannot fine login for last PR commit!');
+        // If there is an author, we know their github login
+        if (payload.author) {
+            login = payload.author.login;
+        } else if (payload.commit.committer) {
+            // This happens when there is no Github username, but we can find
+            // out name and email address
+            name = payload.commit.committer.name;
+            email = payload.commit.committer.email;
+        } else {
+            log.warn('Cannot identify PR committer!');
             log.warn(JSON.stringify(commit, null, 2));
             return;
         }
         shaValidator.performCompleteValidation(
             commit.sha
-          , login
+          , {login: login, name: name, email: email}
           , repoClient
           , validators
           , true
