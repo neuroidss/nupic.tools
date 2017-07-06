@@ -29,17 +29,21 @@ function validator(sha, githubUser, repoClient, callback) {
     }
     contribUtil.getAll(repoClient.contributorsUrl, function(err, contributors) {
         var response = {};
+        var userString = githubUser.login;
+        if (! userString) {
+            userString = githubUser.name;
+        }
         // If there's an error, we'll handle it like a validation failure.
         if (err) {
             response.state = 'failure';
             response.description = 'Error running ' + NAME + ': ' + err;
         } else if (isContributor(githubUser, contributors)) {
             response.state = 'success';
-            response.description = githubUser + ' signed the Contributor License';
+            response.description = userString + ' signed the Contributor License';
             response.target_url = 'http://numenta.org/contributors/';
         } else {
             response.state = 'failure';
-            response.description = githubUser
+            response.description = userString
                 + ' must sign the Contributor License';
             response.target_url = 'http://numenta.org/licenses/cl/';
         }
