@@ -54,7 +54,10 @@ function statusHandler(payload, config, repoClient, validators, callback) {
     }
     // Only process state changes caused by external services (not this server).
     else if (isExternalContext(context, validators)) {
-        var login = payload.commit.committer.login;
+        var login;
+        if (payload.commit.committer) {
+            login = payload.commit.committer.login;
+        }
         if (! login) {
             login = "unknown";
             log.info(payload.commit);
