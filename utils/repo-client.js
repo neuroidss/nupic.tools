@@ -359,7 +359,7 @@ RepositoryClient.prototype.getLastCommitOnPullRequest = function(prNumber, callb
         if (err) {
             callback(err);
         } else {
-            callback(null, commits[commits.length - 1]);
+            callback(null, commits.data[commits.length - 1]);
         }
     });
 };
