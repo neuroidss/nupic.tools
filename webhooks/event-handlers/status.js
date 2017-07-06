@@ -57,10 +57,12 @@ function statusHandler(payload, config, repoClient, validators, callback) {
         var login;
         if (payload.commit.committer) {
             login = payload.commit.committer.login;
+        } else {
+
         }
         if (! login) {
             login = "unknown";
-            log.info(payload.commit);
+            log.info(JSON.stringify(payload.commit, null, 2));
         }
         shaValidator.performCompleteValidation(
             sha
