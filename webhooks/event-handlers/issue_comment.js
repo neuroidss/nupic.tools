@@ -13,6 +13,7 @@ function issueCommentHandler(payload, config, repoClient, validators, callback) 
         if (err) return log.error(err);
         var commit = payload.data;
         var login;
+        log.debug(payload);
         if (commit.committer) {
             login = commit.committer.name;
         } else if (commit.author) {
