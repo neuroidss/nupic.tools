@@ -148,7 +148,7 @@ function lastStatusWasExternal(repoClient, sha, callback) {
         var latestStatus
           , external = false;
 
-        if (statusHistory.length) {
+        if (!err && statusHistory.length) {
             latestStatus = sortStatuses(statusHistory).shift();
             if (latestStatus.description.indexOf(NUPIC_STATUS_PREFIX) != 0) {
                 external = true;

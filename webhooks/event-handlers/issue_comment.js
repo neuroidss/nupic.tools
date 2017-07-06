@@ -12,6 +12,7 @@ function issueCommentHandler(payload, config, repoClient, validators, callback) 
     repoClient.getLastCommitOnPullRequest(prNumber, function(err, payload) {
         var commit = payload.data;
         var login;
+        if (err) return log.error(err);
         if (commit.committer) {
             login = commit.committer.name;
         } else if (commit.author) {
