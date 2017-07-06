@@ -311,7 +311,7 @@ RepositoryClient.prototype.getCommits = function(callback) {
  * @public
  */
 RepositoryClient.prototype.getAllStatusesFor = function(sha, callback) {
-    this.github.statuses.get({
+    this.github.repos.getStatuses({
       owner: this.org,
       repo: this.repo,
       sha:  sha

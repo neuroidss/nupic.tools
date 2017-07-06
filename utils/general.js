@@ -97,7 +97,7 @@ function constructRepoClients(prWebhookUrl, config, callback) {
             if (rate.remaining == 0) {
                 throw Error('Github API Rate Limit Exceeded!');
             }
-        }
+         }
 
         // Now confirm all webhooks are ready.
         _.each(uncheckedClients, function(repoClient, i) {
