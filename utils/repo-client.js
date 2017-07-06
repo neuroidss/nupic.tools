@@ -315,8 +315,8 @@ RepositoryClient.prototype.getAllStatusesFor = function(sha, callback) {
       owner: this.org,
       repo: this.repo,
       sha:  sha
-    }, function(err, statuses) {
-        callback(err, (statuses || []));
+    }, function(err, payload) {
+        callback(err, (payload.data || []));
     });
 };
 

@@ -18,7 +18,7 @@ function postNewNupicStatus(statusContext, sha, statusDetails, repoClient) {
     log.info('Posting new NuPIC Status ('
         + coloredStatus(statusDetails.state) + ') for ' + sha + ' to GitHub');
     var payload = {
-        user: repoClient.org
+        owner: repoClient.org
       , repo: repoClient.repo
       , sha: sha
       , state: statusDetails.state
@@ -26,7 +26,7 @@ function postNewNupicStatus(statusContext, sha, statusDetails, repoClient) {
       , description: statusDetails.description
       , target_url: statusDetails.target_url
     };
-    repoClient.github.statuses.create(payload);
+    repoClient.github.createStatus(payload);
 }
 
 function triggerBuildsOnAllOpenPullRequests(repoClient, callback) {
