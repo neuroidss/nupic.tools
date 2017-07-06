@@ -12,7 +12,6 @@ function issueCommentHandler(payload, config, repoClient, validators, callback) 
     repoClient.getLastCommitOnPullRequest(prNumber, function(err, payload) {
         if (err) return log.error(err);
         var login, email, name;
-        log.debug(JSON.stringify(payload, null, 2));
         // If there is an author, we know their github login
         if (payload.author) {
             login = payload.author.login;
