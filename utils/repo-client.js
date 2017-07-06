@@ -459,10 +459,11 @@ RepositoryClient.prototype.confirmWebhookExists = function(url, events, callback
                     },
                     events: events
                 }, function(err, payload) {
-                    var data = payload.data
+                    var data;
                     if (err) {
                         return callback(err);
                     }
+                    data = payload.data
                     log.info(
                       "%s: created web hook %s for %s, monitoring events '%s'",
                         slug, data.id, data.config.url, data.events.join(', ')
