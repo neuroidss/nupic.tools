@@ -10,7 +10,7 @@ function isContributor(identity, roster) {
     roster.forEach(function(person) {
         if (person.Github == identity.login
             || person.Name == identity.name
-            || person.email == identity.email) {
+            || person.Email == identity.email) {
             found = true;
         }
     });

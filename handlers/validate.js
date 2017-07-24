@@ -85,7 +85,9 @@ function validateSha(req, res) {
             ));
             return jsonUtils.renderErrors(errors, res, jsonPCallback);
         }
-        committer = payload.author ? payload.author.login : false;
+
+        committer = payload.author;
+
         shaValidator.performCompleteValidation(sha, committer, client,
                                                validators, postStatus,
             function (err, sha, validationResponses, repoClient) {
