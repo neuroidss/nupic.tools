@@ -95,7 +95,7 @@ function validateSha(req, res) {
                 if (err) {
                     htmlOut += '<h2>' + err.message + '</h2>\n';
                 } else {
-                    htmlOut += '<h2>' + repoClient.toString() + '</h2>\n';
+                    htmlOut += '<h2>' + client.toString() + '</h2>\n';
                     htmlOut += '<h2>' + sha + '</h2>\n';
                     _.each(validationResponses,
                         function (statusDetails, validatorName) {
