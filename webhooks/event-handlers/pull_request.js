@@ -34,7 +34,7 @@ function pullRequestHandler(payload, config, repoClient, validators, callback) {
             if (external) {
                 shaValidator.performCompleteValidation(
                     sha
-                  , githubUser
+                  , {login: githubUser}
                   , repoClient
                   , validators
                   , true

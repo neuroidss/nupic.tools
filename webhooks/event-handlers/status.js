@@ -66,7 +66,7 @@ function statusHandler(payload, config, repoClient, validators, callback) {
         }
         shaValidator.performCompleteValidation(
             sha
-          , login
+          , {login: login}
           , repoClient
           , validators
           , true
